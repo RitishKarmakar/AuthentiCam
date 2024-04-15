@@ -1,21 +1,20 @@
 import csv
 import subprocess
-import os
 
-# Function to execute daily activities
-def execute_daily_activities(log_file="daily_activities.csv"):
-    with open(log_file, mode='r') as file:
+def execute_unique_start_process_commands(input_file="unique_activities.csv"):
+    executed_processes = set()
+
+    with open(input_file, mode='r') as file:
         reader = csv.DictReader(file)
         for row in reader:
             process_name = row['Process']
-            if os.path.isfile(process_name):
+            if process_name not in executed_processes:
+                executed_processes.add(process_name)
                 start_command = row['PowerShellCommand_Start']
                 print(f"Executing: {start_command}")
                 subprocess.run(["powershell", "-Command", start_command], shell=True)
-
-# Main function
 def main():
-    execute_daily_activities()
+    execute_unique_start_process_commands()
 
 if __name__ == "__main__":
     main()
